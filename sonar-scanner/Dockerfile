@@ -9,7 +9,6 @@ RUN pip --no-cache-dir install \
 
 COPY resources/ /resources/
 
-
 RUN unzip /resources/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip -d /usr/lib/sonar-scanner && \
     ln -s /usr/lib/sonar-scanner/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux-x64/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
     rm -rf /resources
