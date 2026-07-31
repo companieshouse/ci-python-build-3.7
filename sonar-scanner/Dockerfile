@@ -1,14 +1,15 @@
-FROM python:3.7
+FROM --platform=linux/amd64 python:3.7.8
+
+ARG SONAR_SCANNER_CLI_VERSION
 
 RUN pip --no-cache-dir install \
-    pipenv \
-    pytest \
-    boto3
+    pipenv==2020.8.13 \
+    pytest==6.0.1 \
+    boto3==1.14.44
 
-# Install sonar-scanner which is used to perform code analysis thorugh SonarQube
-# TODO: download this binary from AWS resources bucket once the proxy is in place
-ADD https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.0.0.1744-linux.zip ./sonarscanner.zip
-RUN unzip sonarscanner.zip && \
-    rm sonarscanner.zip && \
-    mv sonar-scanner-4.0.0.1744-linux /usr/lib/sonar-scanner && \
-    ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+COPY resources/ /resources/
+
+
+RUN unzip /resources/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip -d /usr/lib/sonar-scanner && \
+    ln -s /usr/lib/sonar-scanner/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux-x64/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
+    rm -rf /resources
